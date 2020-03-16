@@ -16,20 +16,20 @@ $ yarn build
 $ yarn build:analyzer
 ```
 
-## build:dll - 把第三方公共模块构建出来, 加快构建速度
-
-```
-$ yarn build:dll
-```
-
 ## format:fix - 代码格式化
 
 ```
 $ yarn format:fix
 ```
 
-## lint:fix - 代码校验并修复
+## lint:fix - 校验代码 js 并修复
 
 ```
 $ yarn lint:fix
+```
+
+## lint:fix - 校验代码 css 并修复
+
+```
+$ yarn lincsst:fix
 ```
