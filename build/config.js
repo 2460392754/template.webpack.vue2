@@ -1,44 +1,56 @@
-const portfinder = require('portfinder');
-
-module.exports = (function() {
-    const CDN = {
-        use: false,
-        domain: 'http://cdn.pocky.top'
-    };
-
-    this.common = {
+module.exports = (function a() {
+    const common = {
         assetsDir: './assets/',
-        publicDir: '/assets/'
-    };
-
-    this.dev = {
-        mode: 'development',
-        devtool: 'cheap-module-eval-source-map',
-        host: 'localhost',
-        publicDir: '/',
-        assetsDir: '/',
-        port: 8080,
-        jsMap: true
-    };
-
-    this.prod = {
+        publicDir: './assets/',
         mode: 'production',
-        devtool: '#source-map',
-        publicDir: (CDN.use ? CDN.domain : '') + this.common.publicDir, // 加载cdn资源
-        jsMap: false,
-        cssMap: false
+        configEnv: 'prod',
+        devtool: 'source-map',
+        jsMap: true,
+        cssMap: true
     };
 
-    this.dll = {
-        mode: 'production',
-        dllDir: '../dll',
-        dllVendor: ['vue/dist/vue.runtime.esm.js', 'vue-router']
+    const config = {
+        // dev
+        dev: {
+            mode: 'development',
+            configEnv: 'dev',
+            // devtool: 'cheap-module-eval-source-map',
+            host: 'localhost',
+            publicDir: '/',
+            assetsDir: '/',
+            port: 8080
+        },
+
+        // dll
+        dll: {
+            mode: 'production',
+            dllDir: '/dll',
+            dllVendor: ['vue/dist/vue.runtime.esm.js', 'vue-router', 'vuex', 'axios']
+        },
+
+        // prod
+        prod: {
+            publicDir: common.publicDir, // 加载cdn资源
+            jsMap: false,
+            cssMap: false
+        },
+        test: {
+            configEnv: 'test',
+            jsMap: true
+        },
+        analyzer: {
+            pluginMode: 'static'
+        },
+        jarvis: {}
     };
 
-    this.analyzer = {
-        mode: 'production',
-        pluginMode: 'static'
-    };
+    ['dev', 'prod'].forEach((key) => {
+        config[key] = { ...common, ...config[key] };
+    });
 
-    return this;
+    ['test', 'analyzer', 'jarvis'].forEach((key) => {
+        config[key] = { ...config.prod, ...config[key] };
+    });
+
+    return config;
 })();
