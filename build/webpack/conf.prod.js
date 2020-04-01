@@ -44,7 +44,7 @@ function config() {
                         test: /node_modules/,
                         // chunks: 'initial',
                         minSize: 100,
-                        minChunks: 1 //重复引入了几次'
+                        minChunks: 1 // 重复引入了几次'
                     },
                     'async-commons': {
                         // 异步加载公共包、组件等
@@ -60,11 +60,6 @@ function config() {
                         minChunks: 2, // 最少引入2次
                         minSize: 100, // 文件大小超过100b
                         priority: 80
-                    },
-                    vantUI: {
-                        name: 'chunk-vantUI',
-                        test: /[\\/]node_modules[\\/]vant[\\/]/,
-                        priority: 70
                     }
                 }
             },
@@ -102,9 +97,8 @@ function config() {
             // 添加 gzip
             new CompressionWebpackPlugin({
                 test: /\.(js|css|html|svg)$/,
-                threshold: 10240, // 大于10kb
-                // 是否删除源文件
-                deleteOriginalAssets: false,
+                threshold: 1024 * 10,
+                deleteOriginalAssets: false, // 是否删除源文件
                 minRatio: 0.8,
                 cache: true
             }),

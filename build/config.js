@@ -9,6 +9,11 @@ module.exports = (function a() {
         cssMap: true
     };
 
+    const CDN = {
+        use: false,
+        domain: 'http://cdn.pocky.top'
+    };
+
     const config = {
         // dev
         dev: {
@@ -30,7 +35,7 @@ module.exports = (function a() {
 
         // prod
         prod: {
-            publicDir: common.publicDir, // 加载cdn资源
+            publicDir: (CDN.use ? CDN.domain : '') + common.publicDir, // 加载cdn资源
             jsMap: false,
             cssMap: false
         },

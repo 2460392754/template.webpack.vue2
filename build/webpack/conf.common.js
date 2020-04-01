@@ -57,7 +57,7 @@ module.exports = function() {
 
                 // 样式
                 {
-                    test: /\.(sc|sa|c)ss$/,
+                    test: /\.(sc|sa|le|c)ss$/,
                     use: [
                         {
                             loader: IsProd ? MiniCssExtractPlugin.loader : 'style-loader'
@@ -75,6 +75,9 @@ module.exports = function() {
                             }
                         },
                         {
+                            loader: 'less-loader'
+                        },
+                        {
                             loader: 'postcss-loader'
                         }
                     ]
@@ -88,7 +91,7 @@ module.exports = function() {
                             loader: 'url-loader',
                             options: {
                                 esModule: false,
-                                limit: 10240,
+                                limit: 1024 * 10,
                                 name: `img/[name]${hash}.[ext]`
                             }
                         }
@@ -102,13 +105,8 @@ module.exports = function() {
                         {
                             loader: 'url-loader',
                             options: {
-                                limit: 4096,
-                                fallback: {
-                                    loader: 'file-loader',
-                                    options: {
-                                        name: `media/[name]${hash}.[ext]`
-                                    }
-                                }
+                                limit: 1024 * 4,
+                                name: `media/[name]${hash}.[ext]`
                             }
                         }
                     ]
@@ -121,13 +119,8 @@ module.exports = function() {
                         {
                             loader: 'url-loader',
                             options: {
-                                limit: 4096,
-                                fallback: {
-                                    loader: 'file-loader',
-                                    options: {
-                                        name: `fonts/[name]${hash}.[ext]`
-                                    }
-                                }
+                                limit: 1024 * 4,
+                                name: `fonts/[name]${hash}.[ext]`
                             }
                         }
                     ]
