@@ -7,11 +7,11 @@ if (process.argv.length && process.argv[2].includes('build')) {
     Build(ConfigJarvis, [config, require('./conf.prod.js')]);
 }
 
-function config() {
+function config(conf) {
     return {
         plugins: [
             new WebpackJarvis({
-                watchOnly: false
+                watchOnly: conf.watchOnly
             })
         ]
     };

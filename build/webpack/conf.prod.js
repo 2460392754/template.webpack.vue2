@@ -1,8 +1,6 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
-// const AddAssetHtmlWebpackPlugin = require('add-asset-html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// const TerserWebpackPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -44,7 +42,7 @@ function config() {
                         test: /node_modules/,
                         // chunks: 'initial',
                         minSize: 100,
-                        minChunks: 1 //重复引入了几次'
+                        minChunks: 1 // 重复引入了几次'
                     },
                     'async-commons': {
                         // 异步加载公共包、组件等
@@ -60,11 +58,6 @@ function config() {
                         minChunks: 2, // 最少引入2次
                         minSize: 100, // 文件大小超过100b
                         priority: 80
-                    },
-                    vantUI: {
-                        name: 'chunk-vantUI',
-                        test: /[\\/]node_modules[\\/]vant[\\/]/,
-                        priority: 70
                     }
                 }
             },
@@ -74,22 +67,12 @@ function config() {
             }
         },
 
-        module: {
-            // noParse: ''
-        },
-
         plugins: [
             // 删除`dist`文件夹
             new CleanWebpackPlugin(),
 
             // 为模块提供中间缓存, 加快代码编译
             new HardSourceWebpackPlugin(),
-
-            // 引入dll，加快编译
-            // new Webpack.DllReferencePlugin({
-            //     // context: __dirname,
-            //     manifest: Utils.resolve(this.dllDir, 'vendor.manifest.json')
-            // }),
 
             // 拷贝`public`文件夹
             new CopyWebpackPlugin([
@@ -102,9 +85,8 @@ function config() {
             // 添加 gzip
             new CompressionWebpackPlugin({
                 test: /\.(js|css|html|svg)$/,
-                threshold: 10240, // 大于10kb
-                // 是否删除源文件
-                deleteOriginalAssets: false,
+                threshold: 1024 * 10,
+                deleteOriginalAssets: false, // 是否删除源文件
                 minRatio: 0.8,
                 cache: true
             }),
@@ -120,16 +102,6 @@ function config() {
                     removeAttributeQuotes: false // 是否删除属性的双引号
                 }
             }),
-
-            // 将`dll`注入到生成的`html`模板中
-            // new AddAssetHtmlWebpackPlugin({
-            //     // 文件路径
-            //     filepath: Utils.resolve(this.dllDir, '/*.dll.js'),
-            //     // 输出目录
-            //     outputPath: './dll',
-            //     // html文件种注入的路径
-            //     publicPath: this.publicDir + 'dll'
-            // }),
 
             // css从vue中拆分, 编译成单独的文件
             new MiniCssExtractPlugin({

@@ -3,16 +3,16 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const Utils = require('../utils/utils');
 
-module.exports = function() {
-    const IsProd = this.mode === 'production';
+module.exports = function(conf) {
+    const IsProd = conf.mode === 'production';
     const hash = IsProd ? '.[hash:8]' : '';
 
     return {
         // 环境
-        mode: this.mode,
+        mode: conf.mode,
 
         // 源代码映射
-        devtool: this.jsMap ? this.devtool : 'none',
+        devtool: conf.jsMap ? conf.devtool : 'none',
 
         // 入口文件
         entry: {
@@ -21,13 +21,13 @@ module.exports = function() {
 
         output: {
             // 打包文件输出目录
-            path: Utils.resolve('/dist', this.assetsDir),
+            path: Utils.resolve('/dist', conf.assetsDir),
             // js 文件名称
             filename: `js/[name]${hash}.js`,
             // 生成的 chunk 名称
             chunkFilename: `js/[name]${hash}.js`,
             // 资源引用路径
-            publicPath: this.publicDir
+            publicPath: conf.publicDir
         },
 
         resolve: {
@@ -57,22 +57,25 @@ module.exports = function() {
 
                 // 样式
                 {
-                    test: /\.(sc|sa|c)ss$/,
+                    test: /\.(sc|sa|le|c)ss$/,
                     use: [
                         {
                             loader: IsProd ? MiniCssExtractPlugin.loader : 'style-loader'
                         },
                         {
-                            loader: 'css-loader'
-                            // options: {
-                            //     importLoaders: 3
-                            // }
+                            loader: 'css-loader',
+                            options: {
+                                importLoaders: 3
+                            }
                         },
                         {
                             loader: 'sass-loader',
                             options: {
                                 implementation: require('dart-sass')
                             }
+                        },
+                        {
+                            loader: 'less-loader'
                         },
                         {
                             loader: 'postcss-loader'
@@ -88,7 +91,7 @@ module.exports = function() {
                             loader: 'url-loader',
                             options: {
                                 esModule: false,
-                                limit: 10240,
+                                limit: 1024 * 10,
                                 name: `img/[name]${hash}.[ext]`
                             }
                         }
@@ -102,13 +105,8 @@ module.exports = function() {
                         {
                             loader: 'url-loader',
                             options: {
-                                limit: 4096,
-                                fallback: {
-                                    loader: 'file-loader',
-                                    options: {
-                                        name: `media/[name]${hash}.[ext]`
-                                    }
-                                }
+                                limit: 1024 * 4,
+                                name: `media/[name]${hash}.[ext]`
                             }
                         }
                     ]
@@ -121,13 +119,8 @@ module.exports = function() {
                         {
                             loader: 'url-loader',
                             options: {
-                                limit: 4096,
-                                fallback: {
-                                    loader: 'file-loader',
-                                    options: {
-                                        name: `fonts/[name]${hash}.[ext]`
-                                    }
-                                }
+                                limit: 1024 * 4,
+                                name: `fonts/[name]${hash}.[ext]`
                             }
                         }
                     ]

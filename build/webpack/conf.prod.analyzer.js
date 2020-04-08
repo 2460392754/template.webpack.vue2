@@ -7,11 +7,11 @@ if (process.argv.length && process.argv[2].includes('build')) {
     Build(ConfigAnalyzer, [config, require('./conf.prod.js')]);
 }
 
-function config() {
+function config(conf) {
     return {
         plugins: [
             new BundleAnalyzerPlugin({
-                analyzerMode: this.pluginMode
+                analyzerMode: conf.pluginMode
             })
         ]
     };

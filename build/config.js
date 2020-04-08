@@ -9,46 +9,46 @@ module.exports = (function a() {
         cssMap: true
     };
 
+    const CDN = {
+        use: false,
+        domain: 'http://cdn.pocky.top'
+    };
+
     const config = {
         // dev
         dev: {
             mode: 'development',
             configEnv: 'dev',
-            // devtool: 'cheap-module-eval-source-map',
             host: 'localhost',
             publicDir: '/',
             assetsDir: '/',
-            port: 8080
-        },
-
-        // dll
-        dll: {
-            mode: 'production',
-            dllDir: '/dll',
-            dllVendor: ['vue/dist/vue.runtime.esm.js', 'vue-router', 'vuex', 'axios']
+            port: 8080,
+            open: false
         },
 
         // prod
         prod: {
-            publicDir: common.publicDir, // 加载cdn资源
+            publicDir: (CDN.use ? CDN.domain : '') + common.publicDir, // 加载cdn资源
             jsMap: false,
             cssMap: false
         },
-        test: {
-            configEnv: 'test',
+        staging: {
+            configEnv: 'staging',
             jsMap: true
         },
         analyzer: {
             pluginMode: 'static'
         },
-        jarvis: {}
+        jarvis: {
+            watchOnly: false
+        }
     };
 
     ['dev', 'prod'].forEach((key) => {
         config[key] = { ...common, ...config[key] };
     });
 
-    ['test', 'analyzer', 'jarvis'].forEach((key) => {
+    ['staging', 'analyzer', 'jarvis'].forEach((key) => {
         config[key] = { ...config.prod, ...config[key] };
     });
 

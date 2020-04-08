@@ -1,8 +1,7 @@
-const Webpack = require('webpack');
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const Chalk = require('chalk');
+const Webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const Server = require('./server');
 const Utils = require('../utils/utils');
 const { dev: ConfigDev } = require('../config');
@@ -12,7 +11,7 @@ if (process.argv.length && process.argv[2].includes('server')) {
     Server(ConfigDev, [config]);
 }
 
-function config() {
+function config(conf) {
     return {
         // 缓存到内存中
         cache: true,
@@ -21,11 +20,12 @@ function config() {
         devServer: {
             hot: true,
 
-            // open: true,
+            // 是否自动打开浏览器页面
+            open: conf.open,
 
-            host: this.host,
+            host: conf.host,
 
-            port: this.port,
+            port: conf.port,
 
             contentBase: Utils.resolve('/dist'),
 
@@ -71,7 +71,7 @@ function config() {
                 compilationSuccessInfo: {
                     messages: [
                         `Your application is running here: ${Chalk.blue(
-                            `http://${this.host}:${this.port}`
+                            `http://${conf.host}:${conf.port}`
                         )}`
                     ]
                 },

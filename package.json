@@ -7,15 +7,15 @@
         "dev": "node ./build/webpack/conf.dev.js --server",
         "build": "npm run lint:fix && npm run lintcss:fix && npm run format:fix && npm run build:prod",
         "build:prod": "node ./build/webpack/conf.prod.js --build",
-        "build:test": "node ./build/webpack/conf.prod.test.js --build",
+        "build:staging": "node ./build/webpack/conf.prod.staging.js --build",
         "build:analyzer": "node ./build/webpack/conf.prod.analyzer.js  --build",
         "build:jarvis": "node ./build/webpack/conf.prod.jarvis.js  --build",
-        "dll": "webpack --config ./build/webpack/conf.dll.js",
         "format:fix": "prettier --config ./.prettierrc.js --write ./src/**/*.{js,json,css,vue}",
         "lint:fix": "eslint --fix --ext .js,.vue ./src/",
         "lintcss:fix": "stylelint src/**/*.{html,vue,css,sass,scss} --fix --cache",
         "upload:cdn": "node ./scripts/uploadCDN.js",
-        "commit": "git-cz"
+        "commit": "git-cz",
+        "clean:cache": "rimraf ./node_modules/.cache/hard-source"
     },
     "config": {
         "commitizen": {
@@ -38,7 +38,6 @@
         "@babel/runtime-corejs3": "^7.8.7",
         "@commitlint/cli": "^8.3.5",
         "@commitlint/config-conventional": "^8.3.4",
-        "add-asset-html-webpack-plugin": "^3.1.3",
         "autoprefixer": "^9.7.4",
         "babel-eslint": "^10.1.0",
         "babel-loader": "^8.0.6",
