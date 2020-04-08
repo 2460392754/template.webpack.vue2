@@ -5,7 +5,7 @@ const ConfigCommon = require('./conf.common');
 
 module.exports = function(currrentConfig, webpackConfigList) {
     const fnList = [ConfigCommon, ...webpackConfigList];
-    const ConfigList = fnList.map((fn) => fn.call(currrentConfig));
+    const ConfigList = fnList.map((fn) => fn(currrentConfig));
     const AfterConfig = WebpackMerge(ConfigList);
 
     const compiler = Webpack(AfterConfig);
