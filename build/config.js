@@ -19,18 +19,11 @@ module.exports = (function a() {
         dev: {
             mode: 'development',
             configEnv: 'dev',
-            // devtool: 'cheap-module-eval-source-map',
             host: 'localhost',
             publicDir: '/',
             assetsDir: '/',
-            port: 8080
-        },
-
-        // dll
-        dll: {
-            mode: 'production',
-            dllDir: '/dll',
-            dllVendor: ['vue/dist/vue.runtime.esm.js', 'vue-router', 'vuex', 'axios']
+            port: 8080,
+            open: false
         },
 
         // prod
@@ -39,21 +32,23 @@ module.exports = (function a() {
             jsMap: false,
             cssMap: false
         },
-        test: {
-            configEnv: 'test',
+        staging: {
+            configEnv: 'staging',
             jsMap: true
         },
         analyzer: {
             pluginMode: 'static'
         },
-        jarvis: {}
+        jarvis: {
+            watchOnly: false
+        }
     };
 
     ['dev', 'prod'].forEach((key) => {
         config[key] = { ...common, ...config[key] };
     });
 
-    ['test', 'analyzer', 'jarvis'].forEach((key) => {
+    ['staging', 'analyzer', 'jarvis'].forEach((key) => {
         config[key] = { ...config.prod, ...config[key] };
     });
 

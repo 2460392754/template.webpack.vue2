@@ -3,16 +3,16 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const Utils = require('../utils/utils');
 
-module.exports = function() {
-    const IsProd = this.mode === 'production';
+module.exports = function(conf) {
+    const IsProd = conf.mode === 'production';
     const hash = IsProd ? '.[hash:8]' : '';
 
     return {
         // 环境
-        mode: this.mode,
+        mode: conf.mode,
 
         // 源代码映射
-        devtool: this.jsMap ? this.devtool : 'none',
+        devtool: conf.jsMap ? conf.devtool : 'none',
 
         // 入口文件
         entry: {
@@ -21,13 +21,13 @@ module.exports = function() {
 
         output: {
             // 打包文件输出目录
-            path: Utils.resolve('/dist', this.assetsDir),
+            path: Utils.resolve('/dist', conf.assetsDir),
             // js 文件名称
             filename: `js/[name]${hash}.js`,
             // 生成的 chunk 名称
             chunkFilename: `js/[name]${hash}.js`,
             // 资源引用路径
-            publicPath: this.publicDir
+            publicPath: conf.publicDir
         },
 
         resolve: {
@@ -63,10 +63,10 @@ module.exports = function() {
                             loader: IsProd ? MiniCssExtractPlugin.loader : 'style-loader'
                         },
                         {
-                            loader: 'css-loader'
-                            // options: {
-                            //     importLoaders: 3
-                            // }
+                            loader: 'css-loader',
+                            options: {
+                                importLoaders: 3
+                            }
                         },
                         {
                             loader: 'sass-loader',

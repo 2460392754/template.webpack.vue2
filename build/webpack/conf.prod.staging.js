@@ -6,9 +6,9 @@ if (process.argv.length && process.argv[2].includes('build')) {
     Build(ConfigTest, [config, require('./conf.prod.js')]);
 }
 
-function config() {
+function config(conf) {
     return {
-        devtool: this.devtool
+        devtool: conf.devtool
     };
 }
 
