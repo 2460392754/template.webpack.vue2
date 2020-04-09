@@ -57,7 +57,7 @@ module.exports = function(conf) {
 
                 // 样式
                 {
-                    test: /\.(sc|sa|le|c)ss$/,
+                    test: /\.(sc|sa|c)ss$/,
                     use: [
                         {
                             loader: IsProd ? MiniCssExtractPlugin.loader : 'style-loader'
@@ -73,9 +73,6 @@ module.exports = function(conf) {
                             options: {
                                 implementation: require('dart-sass')
                             }
-                        },
-                        {
-                            loader: 'less-loader'
                         },
                         {
                             loader: 'postcss-loader'
