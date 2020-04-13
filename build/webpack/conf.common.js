@@ -74,6 +74,13 @@ module.exports = function(conf) {
                                 implementation: require('dart-sass')
                             }
                         },
+                        // 添加全局变量
+                        {
+                            loader: 'sass-resources-loader',
+                            options: {
+                                resources: [Utils.resolve('/src/assets/styles/variable.scss')]
+                            }
+                        },
                         {
                             loader: 'postcss-loader'
                         }
