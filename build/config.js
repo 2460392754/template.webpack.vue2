@@ -15,7 +15,7 @@ module.exports = (function a() {
     };
 
     const config = {
-        // dev
+        // 开发环境
         dev: {
             mode: 'development',
             configEnv: 'dev',
@@ -26,12 +26,13 @@ module.exports = (function a() {
             open: false
         },
 
-        // prod
+        // 生产环境
         prod: {
             publicDir: (CDN.use ? CDN.domain : '') + common.publicDir, // 加载cdn资源
             jsMap: false,
             cssMap: false
         },
+        // 预生产环境
         staging: {
             configEnv: 'staging',
             jsMap: true
