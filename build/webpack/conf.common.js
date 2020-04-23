@@ -69,10 +69,11 @@ module.exports = function(conf) {
                             }
                         },
                         {
-                            loader: 'sass-loader',
-                            options: {
-                                implementation: require('dart-sass')
-                            }
+                            loader: 'sass-loader'
+                            // 虽然`dart-sass`能够兼容`node-sass`，但最终还是选择`node-sass`，因为`element-ui`中icon代码在编译过程会造成乱码
+                            // options: {
+                            //     implementation: require('dart-sass')
+                            // }
                         },
                         // 添加全局变量
                         {
