@@ -136,8 +136,8 @@ module.exports = function(conf) {
             // 配置环境变量
             new Webpack.DefinePlugin({
                 'process.env': {
-                    NODE_ENV: JSON.stringify(this.mode),
-                    CONFIG_ENV: JSON.stringify(this.configEnv)
+                    NODE_ENV: JSON.stringify(conf.mode),
+                    CONFIG_ENV: JSON.stringify(conf.configEnv)
                 }
             }),
 
