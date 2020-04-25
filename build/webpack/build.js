@@ -1,20 +1,22 @@
-const Ora = require('ora');
 const Webpack = require('webpack');
-const WebpackMerge = require('webpack-merge');
+const Ora = require('ora');
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
-const ConfigCommon = require('./conf.common');
 
-const spinner = Ora(`webpack complie...`);
-const smp = new SpeedMeasurePlugin();
+// console.log(require('../../config'));
 
-module.exports = function(currrentConfig, webpackConfigList) {
-    const fnList = [ConfigCommon, ...webpackConfigList];
-    const ConfigList = fnList.map((fn) => fn(currrentConfig));
-    const AfterConfig = WebpackMerge(ConfigList);
+/**
+ * 生产环境
+ * @param {Object} config webpac配置数据
+ */
+module.exports = function(config) {
+    const spinner = Ora(`webpack编译中...`);
+    const smp = new SpeedMeasurePlugin();
 
+    // 开始运行命令行加载动画
     spinner.start();
 
-    Webpack(smp.wrap(AfterConfig), (err, stats) => {
+    // 运行webpack
+    Webpack(smp.wrap(config), (err, stats) => {
         spinner.stop();
 
         if (err) throw err;

@@ -1,23 +1,22 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const Build = require('./build');
-const Utils = require('../utils/utils');
-const { prod: ConfigProd } = require('../config');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const Utils = require('../utils');
+const Hooks = require('../utils/hooks');
+const fs = require('fs');
+// const DropConsoleWebpackPlugin = require('drop-console-webpack-plugin');
+const SentryPlugin = require('@sentry/webpack-plugin');
 
-if (process.argv.length && process.argv[2].includes('build')) {
-    process.argv = [];
-
-    Build(ConfigProd, [config]);
-}
-
-function config() {
+function config(conf) {
     return {
         // 优化
         optimization: {
+            usedExports: true,
+
             // 代码分割
             splitChunks: {
                 chunks: 'all',
@@ -83,13 +82,15 @@ function config() {
             ]),
 
             // 添加 gzip
-            new CompressionWebpackPlugin({
-                test: /\.(js|css|html|svg)$/,
-                threshold: 1024 * 10,
-                deleteOriginalAssets: false, // 是否删除源文件
-                minRatio: 0.8,
-                cache: true
-            }),
+            conf.gzip
+                ? new CompressionWebpackPlugin({
+                      test: /\.(js|css|html|svg)$/,
+                      threshold: 1024 * 10,
+                      deleteOriginalAssets: false, // 是否删除源文件
+                      minRatio: 0.8,
+                      cache: true
+                  })
+                : () => {},
 
             // html运行模板
             new HtmlWebpackPlugin({
@@ -98,7 +99,7 @@ function config() {
                 filename: '../index.html',
                 minify: {
                     removeComments: true, // 移除HTML中的注释
-                    collapseWhitespace: false, // 删除空白符与换行符
+                    collapseWhitespace: true, // 删除空白符与换行符
                     removeAttributeQuotes: false // 是否删除属性的双引号
                 }
             }),
@@ -107,7 +108,37 @@ function config() {
             new MiniCssExtractPlugin({
                 filename: 'css/[name].[contenthash:8].css',
                 chunkFilename: 'css/[name].[contenthash:8].css'
-            })
+            }),
+
+            // 生成webpack分析输出结果，文件名: stats.json
+            new Hooks({
+                done(statsData) {
+                    if (!conf.stats) return;
+
+                    const stats = statsData.toJson();
+                    fs.writeFileSync(Utils.resolve('stats.json'), JSON.stringify(stats));
+                }
+            }),
+
+            // // 删除 console 代码，默认删除 log和info
+            // new DropConsoleWebpackPlugin(),
+
+            // sentry 前端监控
+            conf.sentry
+                ? new SentryPlugin({
+                      include: './dist',
+                      release: process.env.RELEASE_VERSION,
+                      configFile: 'sentry.properties',
+                      urlPrefix: '~/TechPage/' // 如果不需要也可以不传这个参
+                  })
+                : () => {},
+
+            // 代码依赖分析
+            conf.configEnv === 'analyzer'
+                ? new BundleAnalyzerPlugin({
+                      analyzerMode: conf.pluginMode
+                  })
+                : () => {}
         ]
     };
 }

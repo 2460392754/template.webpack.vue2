@@ -2,14 +2,7 @@ const Chalk = require('chalk');
 const Webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
-const Server = require('./server');
-const Utils = require('../utils/utils');
-const { dev: ConfigDev } = require('../config');
-
-if (process.argv.length && process.argv[2].includes('server')) {
-    process.argv = [];
-    Server(ConfigDev, [config]);
-}
+const Utils = require('../utils');
 
 function config(conf) {
     return {
@@ -45,7 +38,18 @@ function config(conf) {
             compress: true,
 
             // 编译进度条
-            progress: true
+            progress: true,
+
+            // nginx代理
+            proxy: {
+                '/': {
+                    target: conf.proxyUrl,
+                    changeOrigin: true
+                }
+            }
+
+            // 配置 vueRouter history 模式
+            // historyApiFallback: true
         },
 
         plugins: [

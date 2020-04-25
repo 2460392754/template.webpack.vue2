@@ -1,7 +1,7 @@
 const Webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const Utils = require('../utils/utils');
+const Utils = require('../utils');
 
 module.exports = function(conf) {
     const IsProd = conf.mode === 'production';
@@ -19,6 +19,7 @@ module.exports = function(conf) {
             main: Utils.resolve('/src/main.js')
         },
 
+        // 输出
         output: {
             // 打包文件输出目录
             path: Utils.resolve('/dist', conf.assetsDir),
@@ -35,7 +36,8 @@ module.exports = function(conf) {
             alias: {
                 vue$: 'vue/dist/vue.runtime.esm.js',
                 '@': Utils.resolve('/src'),
-                '@c': Utils.resolve('/src/components')
+                '@c': Utils.resolve('/src/components'),
+                '@config': Utils.resolve('/config')
             },
             extensions: ['.js', '.vue', '.json']
         },
@@ -65,7 +67,8 @@ module.exports = function(conf) {
                         {
                             loader: 'css-loader',
                             options: {
-                                importLoaders: 3
+                                // 在一个 css 中引入了另一个 css，也会执行之前两个 loader，即 postcss-loader 和 sass-loader
+                                // importLoaders: 3
                             }
                         },
                         {
@@ -76,21 +79,54 @@ module.exports = function(conf) {
                             // }
                         },
                         // 添加全局变量
-                        {
-                            loader: 'sass-resources-loader',
-                            options: {
-                                resources: [Utils.resolve('/src/assets/styles/variable.scss')]
-                            }
-                        },
+                        // {
+                        //     loader: 'sass-resources-loader',
+                        //     options: {
+                        //         resources: [Utils.resolve('/src/assets/styles/variable.scss')]
+                        //     }
+                        // },
                         {
                             loader: 'postcss-loader'
                         }
                     ]
                 },
 
+                // svg文件
+                {
+                    test: /\.svg$/,
+                    use: [
+                        {
+                            loader: 'url-loader',
+                            options: {
+                                esModule: false,
+                                limit: 1024 * 10,
+                                name: `svg/[name]${hash}.[ext]`
+                            }
+                        },
+                        {
+                            loader: 'svgo-loader',
+                            options: {
+                                plugins: [
+                                    {
+                                        removeTitle: true
+                                    },
+                                    {
+                                        convertColors: {
+                                            shorthex: false
+                                        }
+                                    },
+                                    {
+                                        convertPathData: false
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+
                 // 图片
                 {
-                    test: /\.(jpe?g|png|gif|svg)$/i,
+                    test: /\.(jpe?g|png|gif)$/i,
                     use: [
                         {
                             loader: 'url-loader',

@@ -1,17 +1,16 @@
 const Webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
-const WebpackMerge = require('webpack-merge');
-const ConfigCommon = require('./conf.common');
 
-module.exports = function(currrentConfig, webpackConfigList) {
-    const fnList = [ConfigCommon, ...webpackConfigList];
-    const ConfigList = fnList.map((fn) => fn(currrentConfig));
-    const AfterConfig = WebpackMerge(ConfigList);
+/**
+ * 开发环境
+ * @param {Object} config webpac配置数据
+ */
+module.exports = function(config) {
+    const compiler = Webpack(config);
+    const server = new WebpackDevServer(compiler, config.devServer);
 
-    const compiler = Webpack(AfterConfig);
-    const server = new WebpackDevServer(compiler, AfterConfig.devServer);
-
-    server.listen(AfterConfig.devServer.port, (err) => {
+    // 监听文件变化
+    server.listen(config.devServer.port, (err) => {
         if (err) throw err;
     });
 };
