@@ -46,10 +46,10 @@ function config(conf) {
                     target: conf.proxyUrl,
                     changeOrigin: true
                 }
-            }
+            },
 
-            // 配置 vueRouter history 模式
-            // historyApiFallback: true
+            // 支持 window.history 模式资源刷新
+            historyApiFallback: true
         },
 
         plugins: [
@@ -78,6 +78,11 @@ function config(conf) {
                             `http://${conf.host}:${conf.port}`
                         )}`
                     ]
+                },
+
+                onErrors(severity, errors) {
+                    console.log(Chalk.red(`webpack complie ${severity}: `));
+                    console.log(errors);
                 },
 
                 // 每次编译之后清除控制台
