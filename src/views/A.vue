@@ -1,9 +1,5 @@
 <script>
-export default {
-    data: {
-        a: 'is a'
-    }
-};
+export default {};
 </script>
 
 <template>
