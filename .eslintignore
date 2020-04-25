@@ -2,6 +2,8 @@
 node_modules/
 dist/
 dll/
+build/
+scripts/
 
 # 忽略文件
 *.min.js
