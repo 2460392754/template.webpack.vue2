@@ -2,6 +2,8 @@
 node_modules
 /dist
 .stylelintcache
+stats.json
+.stylelintcache
 
 # local env files
 .env.local
